@@ -1,16 +1,22 @@
 import { Router } from "express";
 import { TUser, users } from "../data";
 import { findUserByEmailAndPassword } from "../users/user.service";
+import bcrypt from "bcrypt";
+
 
 const router = Router()
+const saltRounds= 10; 
 
-router.post('/register', (req, res) => {
+router.post('/register', async (req, res) => {
     const user: TUser = req.body;
-    // user.password = crypted
+    const crypted = await bcrypt.hash(user.password, saltRounds)
+    user.password = crypted
     users.push(user)
 
     res.json({ status: 'ok', data: user })
 })
+
+
 
 router.post('/login', (req, res) => {
     const user: TUser = req.body;
