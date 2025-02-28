@@ -1,0 +1,46 @@
+// const express = require("express");
+// const bcrypt = require("bcrypt");
+
+// const app = express();
+// app.use(express.json()); // Middleware pour lire le JSON
+
+// const saltRounds = 10; // Plus il est élevé, plus le hash est sécurisé mais lent
+
+// // Simulation d'une base de données (en vrai, ce serait MongoDB ou PostgreSQL)
+// let users = [];
+
+app.post("/register", async (req, res) => {
+    
+        const { username, password } = req.body;
+        
+        // Hachage du mot de passe
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        
+        // Sauvegarde de l'utilisateur
+        users.push({ username, password: hashedPassword });
+
+        res.status(201).json({ message: "Utilisateur enregistré !" });
+    
+});
+
+app.post("/login", async (req, res) => {
+    try {
+        const { username, password } = req.body;
+        const user = users.find(u => u.username === username);
+
+        if (!user) return res.status(400).json({ error: "Utilisateur non trouvé" });
+
+        // Vérification du mot de passe
+        const isMatch = await bcrypt.compare(password, user.password);
+
+        if (isMatch) {
+            res.json({ message: "Connexion réussie ✅" });
+        } else {
+            res.status(400).json({ error: "Mot de passe incorrect ❌" });
+        }
+    } catch (error) {
+        res.status(500).json({ error: "Erreur lors de la connexion" });
+    }
+});
+
+app.listen(3000, () => console.log("Serveur démarré sur http://localhost:3000"));
