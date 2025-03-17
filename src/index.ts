@@ -3,9 +3,10 @@ import cors from 'cors'
 import parser from 'body-parser'
 import routerUser from './users/users.handler'
 import routerAuth from './auth/auth.handler'
+import { TUser, users } from './data'
 
 const app = express()
-const port = 8000
+const port = 8000;
 
 app.use(cors({
     origin: '*'
@@ -14,12 +15,21 @@ app.use(parser.json());
 app.use(routerUser)
 app.use(routerAuth)
 
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 // app.post('/register', (req, res) => {
 //     const user: TUser = req.body;
-
-//     users.push(user)
-
-//     res.json({status: 'ok', data: user})
+//     // verifier le user.email si valid
+//     const isValid = emailRegex.test(user.email);
+//     console.log(isValid);
+    
+//     if (isValid) {
+//         users.push(user)
+//         // res.json({status: 'ok', data: user, isValid})
+//     }else{
+//         res.status(400).json({message: 'email invalid'})
+//     }
 // })
 
 // app.post('/login', (req, res) => {
